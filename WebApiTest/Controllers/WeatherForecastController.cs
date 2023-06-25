@@ -6,7 +6,7 @@ using WebApiTest.Options;
 namespace WebApiTest.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/forecasts")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -41,7 +41,7 @@ namespace WebApiTest.Controllers
         }
 
         [FeatureGate(FeatureManagement.FeatureA)]
-        [HttpGet("{id}", Name = "GetWeatherForecastById")]
+        [HttpGet("id/{id}", Name = "GetWeatherForecastById")]
         public async Task<WeatherForecast> Get(int id)
         {
             return new WeatherForecast
@@ -52,20 +52,10 @@ namespace WebApiTest.Controllers
             };
         }
 
-        [HttpGet("{client}", Name = "GetWeatherForecastByClient")]
+        [FeatureGate(FeatureManagement.FeatureC)]
+        [HttpGet("client", Name = "GetWeatherForecastByClient")]
         public async Task<IEnumerable<WeatherForecast>> GetByClient()
         {
-            if (await _featureManager.IsEnabledAsync(FeatureManagement.FeatureA))
-            {
-                return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                    {
-                        Date = DateTime.Now.AddDays(index),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-                    })
-                    .ToArray();
-            }
-
             return new List<WeatherForecast>();
         }
     }

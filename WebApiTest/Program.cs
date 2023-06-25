@@ -1,9 +1,12 @@
 using Microsoft.FeatureManagement;
+using WebApiTest.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddFeatureManagement();
+builder.Services
+    .AddFeatureManagement()
+    .AddFeatureFilter<ClientFilter>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
